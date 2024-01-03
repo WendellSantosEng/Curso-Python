@@ -4,4 +4,4 @@
 <p></p>
 <a> Instrutor : Luiz Otavio Miranda - https://github.com/luizomf </a> 
 <p></p>
-<a> Curso : href="https://www.udemy.com/course/python-3-do-zero-ao-avancado/" </a> 
+<a> Curso : (href="https://www.udemy.com/course/python-3-do-zero-ao-avancado/") </a> 
