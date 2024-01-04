@@ -8,7 +8,7 @@ class Conta(ABC):
         self._saldo = saldo
 
     def __str__(self):
-        return f'Agencia: {self._agencia}\nNumero da Conta: {self._numero_conta}\nSaldo: {self.saldo}\n'
+        return f'\n     => Agencia: {self._agencia}\n     => Numero da Conta: {self._numero_conta}\n     => Saldo: {self.saldo}'
    
     @property
     def agencia(self):
@@ -34,32 +34,42 @@ class Conta(ABC):
     def saldo(self, saldo):
         self._saldo = saldo
 
-    @property
-    def pessoa(self):
-        return self._pessoa
-    
-    @pessoa.setter
-    def pessoa(self, pessoa):
-        self._pessoa = pessoa
-
-
-
     def depositar(self, quant):
         self._saldo += quant
         return self.saldo
 
     @abstractmethod
-    def sacar(self, quant):
+    def sacar(self, quant,conta):
         pass
 class ContaPoupanca(Conta):
-    def sacar(self, quant):
-        self._saldo -= quant
-        return self.saldo
+    def sacar(self, quant,conta):
+        if isinstance(conta, ContaPoupanca):
+            if self._saldo - quant < -500 : # A conta é Poupança, entao o Banco esta dando 500 a mais pra sacar
+                print("Sua conta é poupanca, o seu limite de saque ja foi atingido!")
+                return False
+            self._saldo -= quant
+            return self.saldo
+        elif isinstance(conta, ContaCorrente):
+            if self._saldo - quant < 0 :
+                print("Nao foi possivel sacar esse valor")
+                return False
+            self._saldo -= quant
+            return self.saldo
 
 class ContaCorrente(Conta):
-    def sacar(self, quant):
-        self._saldo -= quant
-        return self.saldo
+    def sacar(self, quant,conta):
+        if isinstance(conta, ContaPoupanca):
+            if self._saldo - quant < 500 : # A conta é Poupança, entao o Banco esta dando 500 a mais pra sacar
+                print("Sua conta é poupanca, o seu limite de saque ja foi atingido!")
+                return False
+            self._saldo -= quant
+            return self.saldo
+        elif isinstance(conta, ContaCorrente):
+            if self._saldo - quant < 0 :
+                print("Nao foi possivel sacar esse valor")
+                return False
+            self._saldo -= quant
+            return self.saldo
 
 ############################################################################
     
@@ -70,7 +80,7 @@ class Pessoa(ABC):
         self._cpf = cpf
 
     def __str__(self):
-        return f"=> Nome {self._nome}\n=> CPF {self._cpf}"
+        return f"\n     => Nome {self._nome}\n     => CPF {self._cpf}"
 
     @property
     @abstractmethod
@@ -89,6 +99,9 @@ class Cliente(Pessoa):
         self._senha = senha
         self._conta = conta
 
+    def __str__(self):
+        return f"{super().__str__()}\n\n   Conta: {self._conta}\n"
+
     @property
     def nome(self) -> str:
         return self._nome
@@ -104,36 +117,41 @@ class Cliente(Pessoa):
     @property
     def conta(self) -> str:
         return self._conta
-
+    
+    @conta.setter
+    def conta(self,conta):
+        self._conta = conta
 
 ############################################################################
-    
 
 class Banco:
 
     def __init__(self):
-        self._nome = None
-        self._cpf = None
-        self.cadastradas = []
-        
-    def adicionar_conta_cadastrada(self, conta):
-        self.cadastradas.append(conta)
+        self.bancos_cadastrados = []
 
     def __str__(self):
-        output = "Contas Cadastradas:\n"
-        # print(f"\nNome: {self._nome}   CPF: {self._cpf}")
-        for conta in self.cadastradas:
-            output += f"{conta}\n"
+        output = "Informações do Banco:\n"
+        output += "Bancos Cadastrados:\n"
+        for banco in self.bancos_cadastrados:
+            output += f"   Cliente: {banco.cliente.nome}\n   Agência: {banco.agencia}\n\n"
         return output
-    
-    @property
-    def conta(self):
-        return self._conta
-    
-    @conta.setter
-    def conta(self, conta):
-        self._conta = conta
-    
+
+    def adicionar_banco(self, novo_banco):
+        self.bancos_cadastrados.append(novo_banco)
+
+    def mostrar_bancos(self):
+        for banco in self.bancos_cadastrados:
+            print(banco)
+
+class BancoUsuario:
+
+    def __init__(self, agencia = None, cliente = None):
+        self._agencia = agencia
+        self._cliente = cliente
+
+    def __str__(self):
+        return f"Cliente: {self.cliente}\nAgência: {self.agencia}\n"
+
     @property
     def agencia(self):
         return self._agencia
