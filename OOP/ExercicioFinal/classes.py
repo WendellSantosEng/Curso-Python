@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 class Conta(ABC):
 
-    def __init__(self, agencia, numero_conta, saldo):
+    def __init__(self, agencia: str| None, numero_conta, saldo):
         self._agencia = agencia
         self._numero_conta = numero_conta
         self._saldo = saldo
@@ -11,7 +11,7 @@ class Conta(ABC):
         return f'\n     => Agencia: {self._agencia}\n     => Numero da Conta: {self._numero_conta}\n     => Saldo: {self.saldo}'
    
     @property
-    def agencia(self):
+    def agencia(self) -> str | None:
         return self._agencia
     
     @agencia.setter
@@ -115,7 +115,7 @@ class Cliente(Pessoa):
         return self._senha
 
     @property
-    def conta(self) -> str:
+    def conta(self):
         return self._conta
     
     @conta.setter
@@ -145,7 +145,7 @@ class Banco:
 
 class BancoUsuario:
 
-    def __init__(self, agencia = None, cliente = None):
+    def __init__(self, agencia : str | None, cliente: Cliente | None):
         self._agencia = agencia
         self._cliente = cliente
 
@@ -153,7 +153,7 @@ class BancoUsuario:
         return f"Cliente: {self.cliente}\nAgência: {self.agencia}\n"
 
     @property
-    def agencia(self):
+    def agencia(self) -> str | None:
         return self._agencia
     
     @agencia.setter
