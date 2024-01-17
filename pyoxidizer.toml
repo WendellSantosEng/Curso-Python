@@ -1,0 +1,19 @@
+[project]
+name = "CodSup"
+version = "0.1.0"
+
+[python]
+interpreter = { implementation = "cpython" }
+
+[packages]
+packages = [
+    { crate = "openpyxl", version = "3.1.2", module = "openpyxl", subtree = ["load_workbook", "cell", "worksheet"] },
+    { crate = "PySide6", version = "6.6.1", module = "PySide6", subtree = ["QtWidgets", "QtGui", "QtCore"] },
+]
+
+[target.'cfg(target_os = "windows")']
+artifact-name = "meu_app.exe"
+
+[[binaries]]
+name = "CodSup"
+path = r"C:\workspace\Curso Python Udemy\PySide6\codsup\setup.py"
